@@ -25,6 +25,7 @@ namespace PhoneKeypadSimulator.Services
 
             List<char> result = new List<char>();
             int i = 0;
+            int? lastProcessedButton = null;
 
             while (i < input.Length)
             {
@@ -39,7 +40,16 @@ namespace PhoneKeypadSimulator.Services
                 {
                     if (result.Count > 0)
                     {
+                        char removed = result[result.Count - 1];
                         result.RemoveAt(result.Count - 1);
+                        if (removed == ' ')
+                        {
+                            lastProcessedButton = 0;
+                        }
+                        else if (result.Count == 0)
+                        {
+                            lastProcessedButton = null;
+                        }
                     }
                     i++;
                     continue;
@@ -47,42 +57,30 @@ namespace PhoneKeypadSimulator.Services
 
                 if (currentChar == '0')
                 {
-                    int j = i + 1;
-                    while (j < input.Length && (input[j] == '0' || input[j] == ' '))
-                    {
-                        j++;
-                    }
-
-                    bool isSeparator = result.Count > 0 && j < input.Length && 
-                                     char.IsDigit(input[j]) && 
-                                     input[j] != '0' && 
-                                     input[j] != SEND_CHAR && 
-                                     input[j] != BACKSPACE_CHAR;
-
-                    if (!isSeparator)
-                    {
-                        result.Add(' ');
-                    }
-
-                    i = j;
+                    result.Add(' ');
+                    lastProcessedButton = 0;
+                    i++;
                     continue;
                 }
 
-                if (currentChar == ' ')
+                if (currentChar == ' ' || currentChar == '0')
                 {
-                    int j = i + 1;
-                    while (j < input.Length && (input[j] == ' ' || input[j] == '0'))
+                    int spaceStart = i;
+                    while (i < input.Length && (input[i] == ' ' || input[i] == '0'))
                     {
-                        j++;
+                        i++;
                     }
 
-                    bool isSeparator = result.Count > 0 && j < input.Length && 
-                                     char.IsDigit(input[j]) && 
-                                     input[j] != '0' && 
-                                     input[j] != SEND_CHAR && 
-                                     input[j] != BACKSPACE_CHAR;
-
-                    i = j;
+                    if (i < input.Length && char.IsDigit(input[i]) && input[i] != '0')
+                    {
+                        int nextButton = int.Parse(input[i].ToString());
+                        if (lastProcessedButton.HasValue && 
+                            lastProcessedButton.Value != 0 && 
+                            lastProcessedButton.Value != nextButton)
+                        {
+                            result.Add(' ');
+                        }
+                    }
                     continue;
                 }
 
@@ -104,15 +102,24 @@ namespace PhoneKeypadSimulator.Services
                     int pressCount = 0;
                     int j = i;
 
-                    while (j < input.Length && input[j] == currentChar)
+                    while (j < input.Length && 
+                           input[j] != ' ' && 
+                           input[j] != '0' && 
+                           input[j] != SEND_CHAR && 
+                           input[j] != BACKSPACE_CHAR &&
+                           input[j] == currentChar)
                     {
                         pressCount++;
                         j++;
                     }
 
-                    int charIndex = (pressCount - 1) % characters.Length;
-                    char character = char.ToLower(characters[charIndex]);
-                    result.Add(character);
+                    if (pressCount > 0)
+                    {
+                        int charIndex = (pressCount - 1) % characters.Length;
+                        char character = char.ToLower(characters[charIndex]);
+                        result.Add(character);
+                        lastProcessedButton = buttonNumber;
+                    }
 
                     i = j;
                 }
