@@ -12,3 +12,4 @@ C:\Users\Hsu Sandar Swe\source\repos\PhoneKeypadSimulator\PhoneKeypadSimulator\o
 C:\Users\Hsu Sandar Swe\source\repos\PhoneKeypadSimulator\PhoneKeypadSimulator\obj\Debug\net8.0\PhoneKeypadSimulator.pdb
 C:\Users\Hsu Sandar Swe\source\repos\PhoneKeypadSimulator\PhoneKeypadSimulator\obj\Debug\net8.0\PhoneKeypadSimulator.genruntimeconfig.cache
 C:\Users\Hsu Sandar Swe\source\repos\PhoneKeypadSimulator\PhoneKeypadSimulator\obj\Debug\net8.0\ref\PhoneKeypadSimulator.dll
+C:\Users\Hsu Sandar Swe\source\repos\PhoneKeypadSimulator\PhoneKeypadSimulator\obj\Debug\net8.0\PhoneKeypadSimulator.sourcelink.json
