@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace PhoneKeypadSimulator.Models
 {
     public class KeyMappings
     {
-        // Dictionary mapping button number (0-9) to character sequence
         public static Dictionary<int, string> KeypadMapping { get; } = new Dictionary<int, string>
         {
-            { 0, " " },        // Space (or could be empty/other)
-            { 1, "" },         // Usually empty or special chars
+            { 0, " " },
+            { 1, "" },
             { 2, "ABC" },
             { 3, "DEF" },
             { 4, "GHI" },
@@ -22,6 +17,7 @@ namespace PhoneKeypadSimulator.Models
             { 8, "TUV" },
             { 9, "WXYZ" }
         };
+
         public static char? GetCharacter(int buttonNumber, int pressCount)
         {
             if (!KeypadMapping.ContainsKey(buttonNumber))

@@ -2,49 +2,9 @@
 
 namespace PhoneKeypadSimulator
 {
-    /// <summary>
-    /// Main program for Phone Keypad Simulator.
-    /// Simulates an old mobile phone keypad input system with batch text conversion.
-    /// </summary>
     class Program
     {
         static void Main(string[] args)
-        {
-            DisplayWelcomeMessage();
-
-            var keypadService = new KeypadServices();
-
-            bool continueRunning = true;
-            while (continueRunning)
-            {
-                string input = GetUserInput();
-                
-                if (string.IsNullOrEmpty(input))
-                {
-                    continue;
-                }
-
-                // Process the full input string
-                string result = keypadService.ConvertText(input);
-                
-                // Display the result
-                Console.WriteLine($"\n>>> Message: \"{result}\" <<<\n");
-
-                continueRunning = AskToContinue();
-
-                if (continueRunning)
-                {
-                    Console.WriteLine("\n--- New Message ---\n");
-                }
-            }
-
-            Console.WriteLine("\nHappy Coding! Hope to see you again!");
-        }
-
-        /// <summary>
-        /// Displays welcome message and usage instructions.
-        /// </summary>
-        static void DisplayWelcomeMessage()
         {
             Console.WriteLine("========================================");
             Console.WriteLine("   Phone Keypad Simulator");
@@ -56,76 +16,82 @@ namespace PhoneKeypadSimulator
             Console.WriteLine("  - Press '#' or Enter to send message");
             Console.WriteLine("  - Press Escape to cancel\n");
             Console.WriteLine("========================================\n");
+
+
+            var keypadService = new KeypadServices();
+
+            while (true)
+            {
+                Console.Write("Input: ");
+                string input = GetUserInput();
+                
+                if (string.IsNullOrEmpty(input))
+                {
+                    continue;
+                }
+
+                string result = keypadService.ConvertText(input);
+                Console.WriteLine($"Output: \"{result}\"\n");
+
+                Console.Write("Do you want to continue? (Y/N): ");
+                if (char.ToLower(Console.ReadKey().KeyChar) != 'y')
+                {
+                    break;
+                }
+                Console.WriteLine("\n");
+            }
         }
 
-        /// <summary>
-        /// Gets user input until '#' or Enter is pressed.
-        /// </summary>
-        /// <returns>The input string entered by the user</returns>
         static string GetUserInput()
         {
-            Console.WriteLine("Type your message (press # or Enter to send):\n");
-            Console.Write("Input: ");
-
             System.Text.StringBuilder input = new System.Text.StringBuilder();
 
             while (true)
             {
                 ConsoleKeyInfo keyInfo = Console.ReadKey(intercept: true);
-                char keyPress = keyInfo.KeyChar;
 
-                // Handle Escape key to cancel
                 if (keyInfo.Key == ConsoleKey.Escape)
                 {
-                    Console.WriteLine("\n\nMessage cancelled.");
+                    Console.WriteLine();
                     return string.Empty;
                 }
 
-                // Handle Enter key - treat as send (#)
                 if (keyInfo.Key == ConsoleKey.Enter)
                 {
-                    Console.WriteLine("#");
+                    Console.Write('#');
                     input.Append('#');
                     break;
                 }
 
-                // Handle printable characters
-                if (char.IsDigit(keyPress) || keyPress == '*' || keyPress == '#')
+                if (char.IsDigit(keyInfo.KeyChar) || keyInfo.KeyChar == '*' || keyInfo.KeyChar == '#')
                 {
-                    Console.Write(keyPress);
-                    input.Append(keyPress);
+                    if (keyInfo.KeyChar == '0')
+                    {
+                        Console.Write(' ');
+                    }
+                    else
+                    {
+                        Console.Write(keyInfo.KeyChar);
+                    }
+                    input.Append(keyInfo.KeyChar);
 
-                    // If '#' was pressed, stop reading
-                    if (keyPress == '#')
+                    if (keyInfo.KeyChar == '#')
                     {
                         break;
                     }
                 }
-                // Handle backspace key
                 else if (keyInfo.Key == ConsoleKey.Backspace)
                 {
                     if (input.Length > 0)
                     {
                         input.Remove(input.Length - 1, 1);
-                        Console.Write("\b \b"); // Erase the character from console
+                        Console.Write("\b \b");
                     }
                 }
             }
 
-            return input.ToString();
-        }
-
-        /// <summary>
-        /// Asks the user if they want to send another message or exit.
-        /// </summary>
-        /// <returns>True if user wants to continue, False otherwise</returns>
-        static bool AskToContinue()
-        {
-            Console.Write("Do you want to send another message? (Y/N): ");
-            ConsoleKeyInfo response = Console.ReadKey();
             Console.WriteLine();
-
-            return char.ToLower(response.KeyChar) == 'y';
+            return input.ToString();
         }
     }
 }
