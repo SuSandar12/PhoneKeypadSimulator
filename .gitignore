@@ -5,7 +5,9 @@
 
 # dotenv files
 .env
-
+# Build folders
+/bin/
+/obj/
 # User-specific files
 *.rsuser
 *.suo
@@ -42,17 +44,10 @@ bld/
 
 # Visual Studio
 .vs/
-*.user
 *.suo
-
-# Logs and cache
-*.log
-*.cache
-
-# Binaries
-*.exe
-*.dll
-*.pdb
+*.user
+*.userosscache
+*.sln.docstates
 
 # Database (if local)
 *.db
